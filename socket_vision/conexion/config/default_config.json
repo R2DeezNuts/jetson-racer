@@ -1,0 +1,23 @@
+{
+  "network": {
+    "listen_ip": "0.0.0.0",
+    "jetson_ip": "192.168.1.34",
+    "jetson_control_ip": "192.168.1.34",
+    "port": 5050,
+    "video_transport": "udp",
+    "udp_payload_bytes": 1200,
+    "udp_max_inflight_frames": 8,
+    "socket_timeout_sec": 5,
+    "reconnect_delay_sec": 2,
+    "receiver_ip": "192.168.1.43"
+  },
+  "stream": {
+    "width": 512,
+    "height": 288,
+    "fps": 12,
+    "jpeg_quality": 42,
+    "camera_index": 0,
+    "use_gstreamer": true,
+    "gstreamer_pipeline": "nvarguscamerasrc ! video/x-raw(memory:NVMM), width=512, height=288, format=NV12, framerate=12/1 ! nvvidconv ! video/x-raw, format=BGRx ! videoconvert ! video/x-raw, format=BGR ! appsink"
+  }
+}
