@@ -1,0 +1,13 @@
+{
+  "network": {
+    "jetson_ip": "192.168.1.34",
+    "jetson_control_ip": "192.168.1.34",
+    "receiver_ip": "192.168.1.43"
+  },
+  "ssh": {
+    "jetson_user": "jetson",
+    "jetson_host": "192.168.1.34",
+    "ssh_key": "~/.ssh/id_ed25519_jetson",
+    "remote_dir": "~/socket_vision_project"
+  }
+}
