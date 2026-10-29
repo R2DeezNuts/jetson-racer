@@ -1,0 +1,218 @@
+\documentclass[a4paper,11pt]{article}
+
+\usepackage[spanish,es-tabla]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[margin=2cm]{geometry}
+\usepackage{amsmath}
+\usepackage{booktabs}
+\usepackage{array}
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+
+\title{Guion de exposici\'on de 5 minutos}
+\author{Diapositivas 9--17}
+\date{}
+
+\begin{document}
+\maketitle
+
+\section*{C\'alculo de tiempo}
+Se toma una velocidad media de habla de 140 palabras por minuto. Por tanto:
+\[
+5 \text{ min} \times 140 \text{ palabras/min} = 700 \text{ palabras}
+\]
+El reparto se ajusta a la complejidad de cada diapositiva. Las diapositivas de control y esquiva tienen algo m\'as de tiempo; cierre y resultados son m\'as breves.
+
+\begin{center}
+\centering
+\begin{tabular}{@{}clcc@{}}
+\toprule
+\textbf{Diap.} & \textbf{Tema} & \textbf{Tiempo} & \textbf{Palabras objetivo} \\
+\midrule
+9  & Exportaci\'on e inferencia & 35 s & 82 \\
+10 & Procesado de m\'ascaras & 35 s & 82 \\
+11 & Seguimiento del circuito & 30 s & 70 \\
+12 & Esquiva de cajas & 40 s & 93 \\
+13 & Control en Jetson & 40 s & 93 \\
+14 & Arquitectura general & 35 s & 82 \\
+15 & Resultados de prueba real & 30 s & 70 \\
+16 & Conclusiones & 40 s & 93 \\
+17 & Cierre & 15 s & 35 \\
+\midrule
+ & \textbf{Total} & \textbf{300 s} & \textbf{700} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section*{Guion por diapositiva}
+
+\subsection*{Diapositiva 9 -- Exportaci\'on e inferencia}
+Una vez entrenado el modelo, el siguiente paso es prepararlo para ejecuci\'on en el sistema real. Para eso se exporta a formato ONNX desde el notebook completo de entrenamiento. En el runtime, el modelo se carga desde la carpeta de modelos de \texttt{socket\_vision} y se ejecuta con OpenCV DNN. Cada frame se redimensiona, normaliza y pasa por la red para obtener dos m\'ascaras binarias.
+
+\begin{center}
+\centering
+\footnotesize
+\begin{tabular}{@{}L{0.34\linewidth}L{0.58\linewidth}@{}}
+\toprule
+\textbf{Dato que pueden preguntar} & \textbf{Respuesta corta} \\
+\midrule
+Entrada del modelo & Cada frame se redimensiona a \texttt{256 x 256 px} antes de la inferencia. \\
+Video recibido & La configuraci\'on de stream usa \texttt{512 x 288} a \texttt{12 FPS}. \\
+Modelo cargado & \texttt{socket\_vision/models/line\_segmentation/line\_model.onnx}. \\
+Normalizaci\'on & Escala \texttt{1/255}; se genera un blob RGB para OpenCV DNN. \\
+Salida de red & Dos canales: canal 0 = circuito, canal 1 = caja. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection*{Diapositiva 10 -- Procesado de m\'ascaras}
+El modelo devuelve una imagen aproximada de d\'onde est\'a el circuito y d\'onde est\'an las cajas. Esa salida se convierte en dos m\'ascaras sencillas: una para la zona por la que puede avanzar el coche y otra para los obst\'aculos. En c\'odigo, esto se implementa aplicando una sigmoide a la salida de la red y despu\'es un umbral para decidir qu\'e p\'ixeles pertenecen a cada clase. Luego se limpia la m\'ascara del circuito para quitar puntos sueltos y rellenar peque\~nos huecos. Con esa imagen m\'as estable, el programa mira la parte inferior del frame y calcula el centro de la zona transitable.
+
+\begin{center}
+\centering
+\footnotesize
+\begin{tabular}{@{}L{0.34\linewidth}L{0.58\linewidth}@{}}
+\toprule
+\textbf{Par\'ametro} & \textbf{Valor usado} \\
+\midrule
+Umbral general & \texttt{0.50}. \\
+Umbral circuito & \texttt{0.62}. \\
+Umbral caja & \texttt{0.50}. \\
+Limpieza morfol\'ogica & Kernel \texttt{5}; cierre \texttt{2} iteraciones; apertura \texttt{1}. \\
+Filtro de ruido circuito & Componentes menores de \texttt{220 px} se descartan. \\
+ROI del centro del circuito & Del \texttt{50\%} al \texttt{90\%} de la altura de la imagen. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection*{Diapositiva 11 -- L\'ogica de seguimiento del circuito}
+Para seguir el circuito, el sistema compara el centro de la zona segmentada con el centro de la imagen. Si el centro del circuito aparece a la izquierda o a la derecha, se genera un error lateral normalizado. Ese error se transforma en un valor de \textit{steering}. Cuando el error es peque\~no, el coche sigue recto. Si no se detecta zona transitable suficiente, la pol\'itica de seguridad permite detener el coche.
+
+\begin{center}
+\centering
+\footnotesize
+\begin{tabular}{@{}L{0.34\linewidth}L{0.58\linewidth}@{}}
+\toprule
+\textbf{Dato de control} & \textbf{Valor / f\'ormula} \\
+\midrule
+Error lateral & \texttt{center\_offset\_px = centro\_circuito - centro\_imagen}. \\
+Error normalizado & \texttt{offset\_px / (ancho / 2)}. \\
+Suavizado & Media exponencial con \texttt{alpha = 0.35}. \\
+Zona muerta & \texttt{0.02}; por debajo se considera centrado. \\
+Ganancia de giro & \texttt{Kp = 3.2} y ganancia curva \texttt{2.6}. \\
+P\'erdida de circuito & Pol\'itica \texttt{stop}: steering \texttt{0}, throttle \texttt{0}. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection*{Diapositiva 12 -- Esquiva de cajas}
+La evitaci\'on de obst\'aculos se implementa en \texttt{autonomy.py}. El sistema analiza la m\'ascara de cajas en la zona frontal, porque es la parte que afecta directamente a la trayectoria. De cada obst\'aculo se estima posici\'on, \'area y urgencia. Si la caja aparece a la izquierda, se gira hacia la derecha; si aparece a la derecha, se gira hacia la izquierda. Adem\'as, cuanto mayor es el riesgo, m\'as se reduce la velocidad, hasta llegar a parada si es necesario.
+
+\begin{center}
+\centering
+\footnotesize
+\begin{tabular}{@{}L{0.34\linewidth}L{0.58\linewidth}@{}}
+\toprule
+\textbf{Dato de esquiva} & \textbf{Valor usado} \\
+\midrule
+ROI frontal de obst\'aculos & Desde el \texttt{35\%} de la altura hacia abajo. \\
+Zona horizontal v\'alida & Entre \texttt{20\%} y \texttt{80\%} del ancho. \\
+M\'inimo de p\'ixeles caja & \texttt{180 px}; componente m\'inimo \texttt{260 px}. \\
+Tama\~no m\'inimo componente & Anchura \texttt{36 px}, altura \texttt{26 px}. \\
+Area m\'inima / emergencia & \texttt{0.008} / \texttt{0.02} del \'area del frame. \\
+Giro de esquiva & Entre \texttt{0.28} y \texttt{0.68}; retenci\'on \texttt{0.45 s}. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection*{Diapositiva 13 -- Control del coche en Jetson}
+El servidor de control en la Jetson recibe comandos \texttt{auto\_drive} por socket. Cada comando incluye direcci\'on y velocidad, es decir, \textit{steering} y \textit{throttle}. El archivo \texttt{control\_server.py} aplica esos valores usando \texttt{NvidiaRacecar}. Tambi\'en incluye calibraci\'on de direcci\'on y l\'imites para no mandar valores peligrosos. El control manual tiene prioridad temporal sobre el autom\'atico, y el watchdog detiene el coche si dejan de llegar comandos.
+
+\begin{center}
+\centering
+\footnotesize
+\begin{tabular}{@{}L{0.34\linewidth}L{0.58\linewidth}@{}}
+\toprule
+\textbf{Dato del servidor} & \textbf{Valor usado} \\
+\midrule
+Puerto de control & \texttt{5060}. \\
+Comando autom\'atico & JSON por l\'inea con \texttt{cmd=auto\_drive}, \texttt{steering} y \texttt{throttle}. \\
+Watchdog autom\'atico & Si no llegan comandos en \texttt{1 s}, detiene el coche. \\
+Prioridad manual & \texttt{1.8 s}; parada manual mantiene prioridad \texttt{3 s}. \\
+Throttle autom\'atico & Base \texttt{0.55}; m\'aximo \texttt{0.60}. \\
+L\'imites & \textit{steering} y \textit{throttle} se saturan en \texttt{[-1, 1]}. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection*{Diapositiva 14 -- Arquitectura general}
+La arquitectura se separa en dos partes principales. \texttt{circuito\_segmentation} contiene todo lo relacionado con dataset, entrenamiento, pruebas y exportaci\'on del modelo. \texttt{socket\_vision} contiene la ejecuci\'on en tiempo real: visi\'on, comunicaci\'on, control y procesos de Jetson. El PC se usa para entrenar y preparar el modelo. La Jetson captura v\'ideo y ejecuta el control sobre el coche. El script \texttt{main.sh} sincroniza archivos y lanza el flujo completo.
+
+\begin{center}
+\centering
+\footnotesize
+\begin{tabular}{@{}L{0.34\linewidth}L{0.58\linewidth}@{}}
+\toprule
+\textbf{Parte} & \textbf{Dato r\'apido} \\
+\midrule
+Jetson & Captura c\'amara y ejecuta \texttt{sender.py} + \texttt{control\_server.py}. \\
+Port\'atil & Recibe video, ejecuta segmentaci\'on y calcula comandos. \\
+Video & Jetson $\rightarrow$ port\'atil por UDP, puerto \texttt{5050}. \\
+Control & Port\'atil $\rightarrow$ Jetson por socket TCP, puerto \texttt{5060}. \\
+IPs de configuraci\'on & Jetson \texttt{192.168.1.34}; receptor \texttt{192.168.1.43}. \\
+Lanzamiento & \texttt{socket\_vision/conexion/scripts/main.sh}. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection*{Diapositiva 15 -- Resultados de prueba real}
+En la prueba real se valid\'o que el sistema estaba integrado de extremo a extremo: captura de v\'ideo, segmentaci\'on, c\'alculo del centro del circuito, detecci\'on de cajas y env\'io de comandos al coche. La parte positiva es que no se qued\'o solo en un modelo entrenado, sino que funcion\'o dentro del flujo real con Jetson y control. Lo que vimos como principales limitantes fue la parte f\'isica de visi\'on, por el campo de visi\'on reducido o la colocaci\'on adelantada de la c\'amara, y la latencia generada al mandar el v\'ideo al port\'atil, procesarlo y devolver el comando a la Jetson.
+
+\begin{center}
+\centering
+\footnotesize
+\begin{tabular}{@{}L{0.34\linewidth}L{0.58\linewidth}@{}}
+\toprule
+\textbf{Dato de prueba/modelo} & \textbf{Valor} \\
+\midrule
+Prueba real & Integraci\'on validada: c\'amara, segmentaci\'on, comunicaci\'on y control. \\
+Limitante de visi\'on & Campo de visi\'on reducido o c\'amara demasiado adelantada. \\
+Limitante de latencia & V\'ideo Jetson $\rightarrow$ port\'atil y comando port\'atil $\rightarrow$ Jetson. \\
+Dataset propio & \texttt{57} im\'agenes y \texttt{100} anotaciones. \\
+Resoluci\'on anotada & \texttt{640 x 360 px}. \\
+Partici\'on & \texttt{45} entrenamiento, \texttt{12} validaci\'on. \\
+Clases & \texttt{circuito} y \texttt{caja}. \\
+Arquitectura & U-Net ligera con \texttt{7.763.074} par\'ametros entrenables. \\
+Entrada / salida & Entrada \texttt{3 x 256 x 256}; salida \texttt{2} canales. \\
+Entrenamiento & \texttt{BCEWithLogits + Dice Loss}, optimizador \texttt{Adam}. \\
+Batch size & \texttt{8}. \\
+Mejor checkpoint & \'Epoca \texttt{78}; Dice de validaci\'on \texttt{0.9519}. \\
+Uso final & Exportado a \texttt{ONNX} para inferencia con OpenCV DNN. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection*{Diapositiva 16 -- Conclusiones}
+Como conclusi\'on, la segmentaci\'on sem\'antica encaja bien con este problema porque devuelve informaci\'on por p\'ixel y permite tomar decisiones simples. Con solo dos clases, circuito y caja, se cubre la tarea principal. La U-Net ligera reduce el coste de c\'omputo y facilita la inferencia. La prueba real tambi\'en dej\'o claro que los mayores l\'imites actuales no son solo del modelo: influyen mucho el campo de visi\'on de la c\'amara, su colocaci\'on y la latencia del flujo distribuido. Como mejoras futuras, priorizar\'ia recolocar o cambiar la c\'amara y reducir latencia; despu\'es ampliar datos, ajustar umbrales y estudiar DeepLabv3+ o TensorRT.
+
+\begin{center}
+\centering
+\footnotesize
+\begin{tabular}{@{}L{0.34\linewidth}L{0.58\linewidth}@{}}
+\toprule
+\textbf{Posible pregunta} & \textbf{Respuesta breve} \\
+\midrule
+Por qu\'e segmentaci\'on & Porque da informaci\'on por p\'ixel, no solo una caja o etiqueta global. \\
+Por qu\'e dos clases & Bastan para decidir por d\'onde avanzar y qu\'e obst\'aculo evitar. \\
+Por qu\'e U-Net ligera & Menor coste que DeepLabv3+ con ResNet50 para un robot con recursos limitados. \\
+Qu\'e no se midi\'o & No hay m\'etrica formal de latencia/FPS de inferencia en log experimental. \\
+Qu\'e limit\'o la prueba & Campo de visi\'on/posici\'on de c\'amara y latencia Jetson-port\'atil-Jetson. \\
+Futuras mejoras & Mejor c\'amara o posici\'on, menos latencia, m\'as datos, TensorRT y evaluaci\'on formal. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection*{Diapositiva 17 -- Cierre}
+La idea final es que se ha construido una tuber\'ia completa: captura, etiquetado, entrenamiento, exportaci\'on, inferencia y control. No es solo un modelo entrenado, sino una integraci\'on funcional con Jetson y con el control real del coche.
+
+\end{document}

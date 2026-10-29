@@ -1,0 +1,126 @@
+\documentclass[aspectratio=169]{beamer}
+
+\usepackage[spanish,es-tabla]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{booktabs}
+
+\usetheme{Madrid}
+\usecolortheme{seahorse}
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{footline}{%
+  \hfill\scriptsize Diapositiva \insertframenumber\hspace{1em}\vspace{0.6em}}
+
+\title{Sistema de visi\'on artificial para conducci\'on aut\'onoma}
+\author{Juan Jos\'e Prado Neira \and Javier Rego Bargos}
+\date{Exposici\'on final: diapositivas 9--17}
+
+\newcommand{\timing}[2]{%
+  \begin{block}{Tiempo de exposici\'on}
+  \small #1 segundos \quad $\approx$ \quad #2 palabras a 140 palabras/minuto.
+  \end{block}
+}
+
+\begin{document}
+\setcounter{framenumber}{8}
+
+\begin{frame}{Exportaci\'on e inferencia}
+\timing{35}{82}
+\begin{itemize}
+  \item El modelo entrenado se exporta a ONNX.
+  \item Exportaci\'on realizada desde el notebook de entrenamiento.
+  \item En runtime se carga desde \texttt{socket\_vision/models/line\_segmentation}.
+  \item El sistema ejecuta el modelo ONNX con OpenCV DNN.
+  \item Cada frame se normaliza, pasa por la red y se convierte en m\'ascaras binarias.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Procesado de m\'ascaras}
+\timing{35}{82}
+\begin{itemize}
+  \item Archivo: \texttt{socket\_vision/vision/perception/line\_segmentation.py}.
+  \item Se aplica sigmoide y umbral para obtener las clases.
+  \item La m\'ascara del circuito se limpia con operaciones morfol\'ogicas.
+  \item Se filtran componentes peque\~nos para reducir ruido.
+  \item Se calcula el centro de la zona transitable en una regi\'on de inter\'es.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{L\'ogica de seguimiento del circuito}
+\timing{30}{70}
+\begin{itemize}
+  \item Se compara el centro del circuito con el centro de la imagen.
+  \item Si el circuito aparece desplazado, se genera un error lateral.
+  \item Ese error se transforma en \textit{steering}.
+  \item Si el coche est\'a centrado, mantiene avance recto.
+  \item Si se pierde el circuito, puede pararse por seguridad.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Esquiva de cajas}
+\timing{40}{93}
+\begin{itemize}
+  \item Archivo: \texttt{socket\_vision/vision/runtime/autonomy.py}.
+  \item Se analiza la m\'ascara de cajas en la zona frontal.
+  \item Se calcula posici\'on, \'area y urgencia del obst\'aculo.
+  \item Caja a la izquierda: giro hacia la derecha.
+  \item Caja a la derecha: giro hacia la izquierda.
+  \item Si el riesgo es alto, se reduce velocidad o se detiene.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Control del coche en Jetson}
+\timing{40}{93}
+\begin{itemize}
+  \item Archivo: \texttt{socket\_vision/jetson/control\_server.py}.
+  \item Recibe comandos \texttt{auto\_drive} por socket.
+  \item Aplica \textit{steering} y \textit{throttle} con \texttt{NvidiaRacecar}.
+  \item Incluye calibraci\'on de direcci\'on y l\'imites de seguridad.
+  \item Permite control manual con prioridad temporal sobre el autom\'atico.
+  \item Tiene watchdog para detener el coche si se pierden comandos.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Arquitectura general}
+\timing{35}{82}
+\begin{itemize}
+  \item \texttt{circuito\_segmentation}: dataset, entrenamiento, pruebas y exportaci\'on.
+  \item \texttt{socket\_vision}: visi\'on en tiempo real, control, comunicaci\'on y Jetson.
+  \item El PC se usa para entrenamiento y preparaci\'on.
+  \item La Jetson ejecuta captura, comunicaci\'on y control del robot.
+  \item El script \texttt{main.sh} sincroniza y lanza el flujo completo.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Resultados de prueba real}
+\timing{30}{70}
+\begin{itemize}
+  \item Se valid\'o la integraci\'on completa de visi\'on, comunicaci\'on y control.
+  \item El sistema segmenta circuito y cajas en la prueba real.
+  \item Calcula el centro de avance y genera comandos de direcci\'on y velocidad.
+  \item L\'imite observado: campo de visi\'on reducido o c\'amara demasiado adelantada.
+  \item L\'imite observado: latencia por enviar v\'ideo al PC y devolver comandos a Jetson.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Conclusiones}
+\timing{40}{93}
+\begin{itemize}
+  \item La segmentaci\'on sem\'antica es adecuada porque da informaci\'on por p\'ixel.
+  \item Dos clases son suficientes para la tarea: circuito y caja.
+  \item La U-Net ligera permite trabajar con restricciones de c\'omputo.
+  \item La l\'ogica de control convierte m\'ascaras en comandos simples y efectivos.
+  \item Mejoras clave: c\'amara/posici\'on con m\'as campo de visi\'on y reducci\'on de latencia.
+  \item Futuro: m\'as datos, m\'as luz, ajuste de umbrales, DeepLabv3+ o TensorRT.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Cierre}
+\timing{15}{35}
+\begin{itemize}
+  \item Se construy\'o una tuber\'ia completa desde captura y etiquetado hasta conducci\'on aut\'onoma.
+  \item El resultado no es solo un modelo entrenado: es una integraci\'on completa con Jetson y control del coche.
+\end{itemize}
+\end{frame}
+
+\end{document}
