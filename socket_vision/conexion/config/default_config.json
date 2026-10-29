@@ -1,8 +1,8 @@
 {
   "network": {
     "listen_ip": "0.0.0.0",
-    "jetson_ip": "192.168.1.34",
-    "jetson_control_ip": "192.168.1.34",
+    "jetson_ip": "192.168.1.43",
+    "jetson_control_ip": "192.168.1.44",
     "port": 5050,
     "video_transport": "udp",
     "udp_payload_bytes": 1200,

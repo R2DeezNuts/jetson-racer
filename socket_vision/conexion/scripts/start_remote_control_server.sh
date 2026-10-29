@@ -2,7 +2,7 @@
 set -euo pipefail
 source "$(dirname "$0")/load_global_env.sh"
 
-JETSON_HOST="${JETSON_HOST:-jetson@192.168.1.34}"
+JETSON_HOST="${JETSON_HOST:-jetson@192.168.1.44}"
 SSH_KEY="${SSH_KEY:-${SSH_KEY_GLOBAL:-$HOME/.ssh/id_ed25519_jetson}}"
 REMOTE_DIR="${REMOTE_DIR:-${REMOTE_DIR_GLOBAL:-~/socket_vision_project}}"
 REMOTE_LOG="${REMOTE_LOG:-/tmp/socket_vision_control_server.log}"

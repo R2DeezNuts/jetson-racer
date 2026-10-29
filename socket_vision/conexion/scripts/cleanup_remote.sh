@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-JETSON_HOST="${JETSON_HOST:-jetson@192.168.1.34}"
+JETSON_HOST="${JETSON_HOST:-jetson@192.168.1.44}"
 SSH_KEY="${SSH_KEY:-${SSH_KEY_GLOBAL:-$HOME/.ssh/id_ed25519_jetson}}"
 
 SSH_OPTS=(-o BatchMode=yes)

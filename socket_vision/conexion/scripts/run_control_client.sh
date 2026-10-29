@@ -14,7 +14,7 @@ for _ in {1..60}; do
 import socket
 from socket_vision.config_loader import load_runtime_config
 cfg = load_runtime_config(config_dir="socket_vision")
-host = cfg["network"].get("jetson_control_ip", "192.168.1.34")
+host = cfg["network"].get("jetson_control_ip", "192.168.1.44")
 port = int(cfg["control"].get("port", 5060))
 s = socket.socket()
 s.settimeout(0.5)

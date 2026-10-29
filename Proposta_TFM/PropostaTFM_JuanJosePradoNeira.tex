@@ -1,0 +1,150 @@
+\documentclass{article}
+
+\usepackage[spanish]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amsfonts,amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{anysize}
+\usepackage{setspace}
+\usepackage{times}
+
+\marginsize{1.5cm}{1.5cm}{1.5cm}{1.5cm}
+\parindent=0mm
+\parskip=3mm
+\renewcommand{\baselinestretch}{1}
+
+\title{Sistema de visi\'on artificial para conducci\'on aut\'onoma con Jetson Nano}
+\author{Juan Jos\'e Prado Neira \\ Javier Rego Bargos}
+\date{Mayo 2026}
+
+\begin{document}
+
+\maketitle
+
+\section*{Propuesta de trabajo}
+
+\section{Extracto}
+
+El trabajo consiste en desarrollar un sistema de visi\'on artificial para un coche robot basado en Jetson Nano. El objetivo es que el veh\'iculo pueda seguir un circuito o zona transitable y reaccionar ante cajas u obst\'aculos detectados en la imagen.
+
+La soluci\'on utiliza una red neuronal de segmentaci\'on sem\'antica de tipo U-Net. El modelo recibe una imagen RGB y genera dos m\'ascaras: una para el circuito y otra para los obst\'aculos. A partir de estas m\'ascaras se calcula el error lateral del coche y se generan comandos de control normalizados (\textit{steering} y \textit{throttle}).
+
+El sistema se organiza de forma distribuida: la Jetson captura y env\'ia v\'ideo, mientras que el port\'atil ejecuta la inferencia, calcula la acci\'on de control y devuelve las \'ordenes al veh\'iculo.
+
+\section{Introducci\'on}
+
+La visi\'on artificial es una herramienta fundamental en rob\'otica m\'ovil, especialmente cuando se necesita interpretar el entorno de forma flexible. En este proyecto se emplea segmentaci\'on sem\'antica porque permite obtener informaci\'on p\'ixel a p\'ixel de la escena, lo que resulta adecuado para seguir una zona de circulaci\'on y localizar obst\'aculos.
+
+El uso de una Jetson Nano permite trabajar con una plataforma real de bajo coste, cercana a aplicaciones de rob\'otica educativa y prototipado. El proyecto combina captura de v\'ideo, aprendizaje profundo, comunicaci\'on por red y control de actuadores.
+
+\section{Objetivos}
+
+El objetivo general es construir un prototipo funcional de conducci\'on aut\'onoma basado en visi\'on artificial.
+
+Los objetivos concretos son:
+
+\begin{itemize}
+    \item Preparar un dataset propio con im\'agenes del circuito y m\'ascaras de segmentaci\'on.
+    \item Entrenar una red neuronal capaz de segmentar circuito y obst\'aculos.
+    \item Exportar el modelo a ONNX para su uso en inferencia.
+    \item Integrar el flujo de v\'ideo Jetson--port\'atil y el env\'io de comandos port\'atil--Jetson.
+    \item Convertir las m\'ascaras de segmentaci\'on en \'ordenes de direcci\'on y velocidad.
+    \item Evaluar el sistema mediante m\'etricas de segmentaci\'on y pruebas de conducci\'on.
+\end{itemize}
+
+\section{Metodolog\'ia}
+
+Primero se capturan im\'agenes reales del circuito y se anotan con dos clases: \texttt{circuito} y \texttt{caja}. A partir de estas anotaciones se generan m\'ascaras binarias para entrenar el modelo.
+
+Despu\'es se entrena una U-Net peque\~na en PyTorch. La red se dise\~na con dos salidas para resolver en una sola inferencia tanto el seguimiento del circuito como la detecci\'on de obst\'aculos.
+
+Finalmente, el modelo se exporta a ONNX y se integra en el sistema \texttt{socket\_vision}. En ejecuci\'on, la c\'amara de la Jetson env\'ia frames al port\'atil; el port\'atil segmenta la imagen, calcula el centro del circuito y env\'ia comandos de control al coche.
+
+\section{Apartado t\'ecnico}
+
+\subsection{Dataset}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{ll}
+\toprule
+\textbf{Elemento} & \textbf{Valor} \\
+\midrule
+Im\'agenes anotadas & 57 \\
+Anotaciones totales & 100 \\
+Clases & \texttt{circuito}, \texttt{caja} \\
+Resoluci\'on original & $640 \times 360$ \\
+Im\'agenes de entrenamiento & 45 \\
+Im\'agenes de validaci\'on & 12 \\
+Formato de m\'ascara & Binaria por clase \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Modelo neuronal}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{ll}
+\toprule
+\textbf{Caracter\'istica} & \textbf{Valor} \\
+\midrule
+Arquitectura & U-Net ligera \\
+Entrada & $3 \times 256 \times 256$ \\
+Salida & $2 \times 256 \times 256$ \\
+Canales de salida & Circuito y obst\'aculo \\
+Canales del encoder & 32, 64, 128, 256 \\
+Canales del cuello de botella & 512 \\
+Etapas de bajada/subida & 4 / 4 \\
+Convoluciones 2D & 19 \\
+Convoluciones transpuestas & 4 \\
+BatchNorm + ReLU & 18 + 18 \\
+Par\'ametros entrenables & 7.763.074 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Entrenamiento e inferencia}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{ll}
+\toprule
+\textbf{Elemento} & \textbf{Valor} \\
+\midrule
+Framework de entrenamiento & PyTorch 2.11 \\
+Optimizador & Adam \\
+\textit{Learning rate} & $10^{-3}$ \\
+\textit{Batch size} & 8 \\
+Funci\'on de p\'erdida & BCEWithLogits + Dice Loss \\
+M\'etricas & Dice e IoU \\
+Checkpoint seleccionado & \texttt{best\_model.pth} \\
+Mejor \'epoca & 78 \\
+Dice de validaci\'on del mejor modelo & 0.9519 \\
+P\'erdida de validaci\'on del mejor modelo & 0.1175 \\
+Formato de exportaci\'on & ONNX \\
+Resoluci\'on de captura & $512 \times 288$ \\
+Frecuencia objetivo & 12 FPS \\
+Comandos de salida & \textit{steering}, \textit{throttle} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Plan de trabajo}
+
+\begin{itemize}
+    \item \textbf{Fase 1:} revisi\'on del problema, definici\'on de requisitos y preparaci\'on del entorno.
+    \item \textbf{Fase 2:} captura, anotaci\'on y organizaci\'on del dataset.
+    \item \textbf{Fase 3:} entrenamiento, validaci\'on y exportaci\'on del modelo.
+    \item \textbf{Fase 4:} integraci\'on del modelo en el flujo Jetson--port\'atil.
+    \item \textbf{Fase 5:} ajuste del control aut\'onomo y pruebas con obst\'aculos.
+    \item \textbf{Fase 6:} evaluaci\'on final, an\'alisis de resultados y redacci\'on de la memoria.
+\end{itemize}
+
+\section{Evaluaci\'on prevista}
+
+La evaluaci\'on del sistema completo incluir\'a FPS, latencia, estabilidad del seguimiento del circuito, respuesta ante obst\'aculos y necesidad de intervenci\'on manual.
+
+\end{document}

@@ -1,0 +1,43 @@
+{
+  "vision": {
+    "mode": "line_segmentation",
+    "line_input_width": 256,
+    "line_input_height": 256,
+    "line_output_channel": 0,
+    "line_track_channel": 0,
+    "line_box_channel": 1,
+    "black_min_area": 450,
+    "black_min_width_px": 8,
+    "black_max_width_ratio": 0.55,
+    "segmentation_threshold": 0.5,
+    "track_segmentation_threshold": 0.62,
+    "box_segmentation_threshold": 0.5,
+    "track_mask_harden_enabled": true,
+    "track_mask_harden_kernel": 5,
+    "track_mask_close_iter": 2,
+    "track_mask_open_iter": 1,
+    "track_mask_min_component_pixels": 220,
+    "morph_kernel": 5,
+    "track_roi_start_ratio": 0.5,
+    "track_roi_end_ratio": 0.9,
+    "line_row_step_px": 3,
+    "line_track_max_jump_px": 115,
+    "line_min_row_samples": 6,
+    "line_boundary_sample_count": 14,
+    "draw_edge_thickness": 2,
+    "obstacle_detection_enabled": false
+  },
+  "ui": {
+    "window_name": "Jetson Socket Vision",
+    "show_mask": true,
+    "main_window_width": 960,
+    "main_window_height": 540,
+    "mask_window_width": 640,
+    "mask_window_height": 360
+  },
+  "models": {
+    "line_onnx": "models/line_segmentation/line_model.onnx",
+    "line_pth": "models/line_segmentation/line_model_best.pth",
+    "line_engine": "models/line_segmentation/line_model_fp16.engine"
+  }
+}

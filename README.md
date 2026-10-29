@@ -1,16 +1,18 @@
-# Jetson Racer
+# Socket Vision (TFM)
 
-Proyecto académico de percepción y control para un vehículo autónomo basado en Jetson. El sistema conecta la segmentación de imágenes con las órdenes de dirección y aceleración para que el vehículo siga el circuito.
+## Como lanzar el programa
 
-Implementé la segmentación semántica e integré su salida con el control del vehículo, trabajando con Python y PyTorch. Puedes ver la plataforma física en la [demostración](https://youtu.be/iftXwQ2Pxf0).
+Desde la carpeta `TFM/` ejecuta:
 
-## Código y documentación
+```bash
+bash socket_vision/conexion/scripts/main.sh
+```
 
-La carpeta [socket_vision/](socket_vision/) contiene la comunicación entre el portátil y la Jetson, la recepción de vídeo y el control.
+Ese comando sincroniza con la Jetson y arranca el flujo completo (video + control).
 
-- [Conexión y lanzamiento del sistema](socket_vision/conexion/README.md).
-- [Procesos de la Jetson](socket_vision/jetson/README.md).
-- [Cliente de control](socket_vision/control/README.md).
-- [Presentación del proyecto](presentacion/Presentaci%C3%B3nTFM-1.pdf).
+## Bloques principales de `socket_vision`
 
-[Volver al portfolio](https://r2deeznuts.github.io/)
+- `vision`: procesa el video, segmenta circuito/cajas y calcula el comando automatico.
+- `control`: gestiona el control manual y el protocolo de comandos.
+- `conexion`: conecta portatil y Jetson (stream de video, arranque remoto y orquestacion).
+- `jetson`: procesos que corren en la Jetson (`sender` y `control_server`).

@@ -1,0 +1,76 @@
+\documentclass[a4paper,11pt]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish]{babel}
+\usepackage{geometry}
+\usepackage{hyperref}
+\usepackage{xurl}
+\usepackage{array}
+
+\geometry{margin=2.3cm}
+\hypersetup{
+    colorlinks=true,
+    urlcolor=blue,
+    linkcolor=black
+}
+
+\title{Guia de archivos de la entrega}
+\author{Juan Jose Prado Neira \\ Javier Rego Bargos}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\section*{Contenido de la entrega}
+
+Esta carpeta contiene los archivos principales del TFM.
+
+\begin{itemize}
+    \item \texttt{circuito\_segmentation/}: parte usada para preparar el dataset,
+    entrenar el modelo de segmentacion y guardar modelos/resultados.
+    \item \texttt{socket\_vision/}: programas usados para conectar el coche con el
+    portatil, procesar vision en tiempo real y mandar comandos a la Jetson.
+    Dentro contiene otro \texttt{README.md} para navegar esa parte.
+    \item \texttt{paper/}: articulo academico de dos paginas.
+    \item \texttt{presentacion/}: presentacion y guion de exposicion.
+\end{itemize}
+
+\section*{Archivos entregados por OneDrive}
+
+Por problemas de espacio, las carpetas mas pesadas se entregan en una carpeta
+compartida de OneDrive.
+
+\begin{center}
+\url{https://nubeusc-my.sharepoint.com/:f:/g/personal/juanjose_prado_rai_usc_es/IgC97ixKN1sLQa5HmM_D72O4AWIi2pscvEqPPGk-5HM1bmw?e=KOsI5p}
+\end{center}
+
+Dentro de esa carpeta de OneDrive estan:
+
+\begin{itemize}
+    \item \path{circuito_segmentation/data/}: dataset dividido en entrenamiento
+    y validacion.
+    \item \path{circuito_segmentation/outputs/}: predicciones, mascaras y
+    resultados visuales generados durante las pruebas.
+    \item \path{circuito_segmentation/checkpoints/}: modelos entrenados en
+    formato PyTorch, incluyendo el mejor checkpoint usado para exportar a ONNX.
+    \item \path{videos/}: videos recopilados durante el desarrollo y las
+    pruebas del sistema.
+\end{itemize}
+
+\section*{Notas}
+
+El flujo de entrenamiento esta documentado en:
+
+\begin{center}
+\texttt{circuito\_segmentation/notebooks/entrenamiento\_completo\_makesense.ipynb}
+\end{center}
+
+El flujo principal del coche se lanza desde:
+
+\begin{center}
+\texttt{socket\_vision/conexion/scripts/main.sh}
+\end{center}
+
+\end{document}
