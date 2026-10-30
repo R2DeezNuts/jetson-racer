@@ -6,14 +6,16 @@ Este proyecto esta pensado para hacer en el PC todo lo pesado:
 2. Entrenar el modelo de segmentacion.
 3. Probarlo con imagenes o video.
 4. Exportarlo a ONNX.
-5. Pasar a la Jetson Nano solo lo necesario para inferencia.
+5. Usar el ONNX en el runtime integrado de `../socket_vision`, que ejecuta la inferencia en el portátil.
+
+La Jetson captura vídeo y aplica las órdenes recibidas. Consulta el [README principal](../README.md) para arrancar el coche; el ejemplo de inferencia embarcada de esta carpeta es una base experimental.
 
 El modelo por defecto es una UNet pequena en PyTorch con dos salidas:
 
 - canal 0: circuito, lineas o zona transitable
 - canal 1: caja/obstaculo
 
-Esto evita ejecutar dos modelos en la Jetson Nano. Es menos pesado que DeepLabv3+ con ResNet50 y tiene mas sentido para tiempo real.
+Las dos máscaras se obtienen con un único modelo. El rendimiento depende del equipo y no se incluye aquí una comparativa medida con otras arquitecturas.
 
 ## Estructura
 
@@ -186,7 +188,7 @@ python src/export_onnx.py \
   --out exports/circuit_unet.onnx
 ```
 
-## Llevar a Jetson Nano
+## Ejemplo experimental de inferencia en Jetson Nano
 
 Para la Nano copia como minimo:
 
