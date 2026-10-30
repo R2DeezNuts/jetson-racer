@@ -24,7 +24,7 @@ Bloque de comunicacion entre portatil y Jetson para el flujo principal.
 
 ## Lanzamiento recomendado
 
-Desde `TFM/`:
+Desde la raíz de `jetson-racer/`, con red, SSH y `PYTHON_BIN` configurados según el [README principal](../../README.md):
 
 ```bash
 bash socket_vision/conexion/scripts/main.sh
