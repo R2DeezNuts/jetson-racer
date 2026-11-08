@@ -1,6 +1,9 @@
 # Jetson Racer
 
-**Español** · [English](README.en.md)
+<p align="center">
+  <img src="https://img.shields.io/badge/Idioma-Espa%C3%B1ol-2EA44F?style=for-the-badge" alt="Idioma: español">
+  <a href="README.en.md"><img src="https://img.shields.io/badge/Read_in-English-0969DA?style=for-the-badge" alt="Read in English"></a>
+</p>
 
 Prototipo de conducción por visión para un coche con Jetson Nano: segmentación del circuito y obstáculos, cálculo de dirección y aceleración, y control manual desde un portátil.
 

@@ -1,6 +1,9 @@
 # Jetson Racer
 
-[Español](README.md) · **English**
+<p align="center">
+  <img src="https://img.shields.io/badge/Language-English-2EA44F?style=for-the-badge" alt="Language: English">
+  <a href="README.md"><img src="https://img.shields.io/badge/Leer_en-Espa%C3%B1ol-0969DA?style=for-the-badge" alt="Leer en español"></a>
+</p>
 
 A vision-driven prototype for a Jetson Nano car: it segments the track and obstacles, computes steering and throttle, and can be driven manually from a laptop.
 
