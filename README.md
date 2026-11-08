@@ -6,11 +6,11 @@ Prototipo de conducción por visión para un coche con Jetson Nano: segmentació
 
 **Python · OpenCV · PyTorch · ONNX · Jetson Nano**
 
-[Demostraciones](https://github.com/R2DeezNuts/jetson-racer/releases) · [Presentación](docs/Presentaci%C3%B3nTFM-1.pdf) · [Propuesta](docs/PropostaTFM_JuanJosePradoNeira_JavierRegoBargos.pdf) · [Entrenamiento](circuito_segmentation/README.md) · [Portfolio](https://r2deeznuts.github.io/)
+[Vídeo](https://www.youtube.com/watch?v=iftXwQ2Pxf0) · [Presentación](docs/Presentaci%C3%B3nTFM-1.pdf) · [Propuesta](docs/PropostaTFM_JuanJosePradoNeira_JavierRegoBargos.pdf) · [Entrenamiento](circuito_segmentation/README.md) · [Portfolio](https://r2deeznuts.github.io/)
 
-![Interfaz durante una prueba: máscara del circuito y órdenes de conducción](docs/demo.jpg)
+[![Interfaz durante una prueba: máscara del circuito y órdenes de conducción](docs/demo.jpg)](https://www.youtube.com/watch?v=iftXwQ2Pxf0)
 
-*Captura de una de las grabaciones de las pruebas. Los indicadores de la interfaz corresponden a ese instante; no son un benchmark.*
+*Captura de una prueba; pulsa la imagen para ver el [vídeo en YouTube](https://www.youtube.com/watch?v=iftXwQ2Pxf0). Los indicadores de la interfaz corresponden a ese instante; no son un benchmark.*
 
 ## Qué hace
 
@@ -28,7 +28,7 @@ flowchart LR
 
 ## Resultado y límites
 
-Se realizó una prueba integrada con captura de vídeo, segmentación, detección de cajas y envío de comandos al coche. Hay [vídeos de las pruebas](https://github.com/R2DeezNuts/jetson-racer/releases) y una [presentación](docs/Presentaci%C3%B3nTFM-1.pdf) con los resultados y limitaciones.
+Se realizó una prueba integrada con captura de vídeo, segmentación, detección de cajas y envío de comandos al coche. Hay un [vídeo de las pruebas](https://www.youtube.com/watch?v=iftXwQ2Pxf0) y una [presentación](docs/Presentaci%C3%B3nTFM-1.pdf) con los resultados y limitaciones.
 
 La cámara y la latencia del recorrido Jetson–portátil–Jetson condicionan el control. No se dispone de una evaluación formal de FPS, latencia o tasa de éxito; el proyecto documenta un prototipo experimental. La inferencia embarcada en Jetson queda como una vía de desarrollo.
 
@@ -79,7 +79,7 @@ El lanzador sincroniza el runtime con la Jetson y abre las terminales de visión
 
 Para reproducir el entrenamiento, sigue la [guía del modelo](circuito_segmentation/README.md). El runtime integrado del coche está en `socket_vision`; el ejemplo `jetson_runtime.py` del directorio de entrenamiento es una base experimental independiente.
 
-Las grabaciones de las pruebas y los checkpoints de PyTorch (`.pth`) no están en el repositorio por su tamaño: se descargan desde las [Releases](https://github.com/R2DeezNuts/jetson-racer/releases).
+Los checkpoints de PyTorch (`.pth`) y la grabación de la interfaz no están en el repositorio por su tamaño: se descargan desde las [Releases](https://github.com/R2DeezNuts/jetson-racer/releases).
 
 ## Licencia
 

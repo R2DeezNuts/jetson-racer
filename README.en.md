@@ -6,11 +6,11 @@ A vision-driven prototype for a Jetson Nano car: it segments the track and obsta
 
 **Python · OpenCV · PyTorch · ONNX · Jetson Nano**
 
-[Demos](https://github.com/R2DeezNuts/jetson-racer/releases) · [Presentation (Spanish)](docs/Presentaci%C3%B3nTFM-1.pdf) · [Proposal (Spanish)](docs/PropostaTFM_JuanJosePradoNeira_JavierRegoBargos.pdf) · [Training](circuito_segmentation/README.md) · [Portfolio](https://r2deeznuts.github.io/)
+[Video](https://www.youtube.com/watch?v=iftXwQ2Pxf0) · [Presentation (Spanish)](docs/Presentaci%C3%B3nTFM-1.pdf) · [Proposal (Spanish)](docs/PropostaTFM_JuanJosePradoNeira_JavierRegoBargos.pdf) · [Training](circuito_segmentation/README.md) · [Portfolio](https://r2deeznuts.github.io/)
 
-![The interface during a test: track mask and driving commands](docs/demo.jpg)
+[![The interface during a test: track mask and driving commands](docs/demo.jpg)](https://www.youtube.com/watch?v=iftXwQ2Pxf0)
 
-*A frame from one of the test recordings. The figures on screen belong to that moment; they are not a benchmark.*
+*A frame from a test; click the image to watch the [video on YouTube](https://www.youtube.com/watch?v=iftXwQ2Pxf0). The figures on screen belong to that moment; they are not a benchmark.*
 
 ## What it does
 
@@ -28,7 +28,7 @@ flowchart LR
 
 ## Results and limits
 
-An integrated test ran video capture, segmentation, box detection and commands to the car. There are [test videos](https://github.com/R2DeezNuts/jetson-racer/releases) and a [presentation](docs/Presentaci%C3%B3nTFM-1.pdf) (in Spanish) with the results and limitations.
+An integrated test ran video capture, segmentation, box detection and commands to the car. There is a [test video](https://www.youtube.com/watch?v=iftXwQ2Pxf0) and a [presentation](docs/Presentaci%C3%B3nTFM-1.pdf) (in Spanish) with the results and limitations.
 
 The camera and the Jetson–laptop–Jetson round trip latency limit the control. There is no formal measurement of FPS, latency or success rate; this is an experimental prototype. Running inference on the Jetson itself is left as future work.
 
@@ -81,7 +81,7 @@ The module guides are in Spanish.
 
 To reproduce the training, follow the [model guide](circuito_segmentation/README.md). The car's integrated runtime is in `socket_vision`; `jetson_runtime.py` in the training folder is a separate experimental starting point.
 
-The test recordings and the PyTorch checkpoints (`.pth`) are not in the repository because of their size: download them from the [Releases](https://github.com/R2DeezNuts/jetson-racer/releases).
+The PyTorch checkpoints (`.pth`) and the interface recording are not in the repository because of their size: download them from the [Releases](https://github.com/R2DeezNuts/jetson-racer/releases).
 
 ## License
 
