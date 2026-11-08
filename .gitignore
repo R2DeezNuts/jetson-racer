@@ -26,3 +26,8 @@ presentacion/PresentaciónTFM-1.pdf
 
 # Local network settings; copy from socket_vision/global_config.example.json
 socket_vision/global_config.json
+
+# Published as GitHub Release assets or kept only locally
+videos/
+circuito_segmentation/checkpoints/
+versiones_entrega/
