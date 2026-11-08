@@ -10,7 +10,8 @@ export PYTHON_BIN="${PYTHON_BIN:-$HOME/venvs/vision/bin/python}"
 export REMOTE_PYTHON_BIN="${REMOTE_PYTHON_BIN:-python3}"
 
 if [[ ! -f "${GLOBAL_CFG}" ]]; then
-  return 0 2>/dev/null || exit 0
+  echo "Falta ${GLOBAL_CFG}: copia socket_vision/global_config.example.json y ajusta IPs y SSH." >&2
+  return 1 2>/dev/null || exit 1
 fi
 
 readarray -t _SV_GLOBAL < <("${PYTHON_BIN}" - "${GLOBAL_CFG}" <<'PY'

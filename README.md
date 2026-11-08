@@ -1,14 +1,16 @@
 # Jetson Racer
 
+**Español** · [English](README.en.md)
+
 Prototipo de conducción por visión para un coche con Jetson Nano: segmentación del circuito y obstáculos, cálculo de dirección y aceleración, y control manual desde un portátil.
 
 **Python · OpenCV · PyTorch · ONNX · Jetson Nano**
 
-[Demostraciones](videos/) · [Presentación](presentacion/presentacion.pdf) · [Entrenamiento](circuito_segmentation/README.md) · [Portfolio](https://r2deeznuts.github.io/)
+[Demostraciones](https://github.com/R2DeezNuts/jetson-racer/releases) · [Presentación](presentacion/presentacion.pdf) · [Entrenamiento](circuito_segmentation/README.md) · [Portfolio](https://r2deeznuts.github.io/)
 
 ![Interfaz durante una prueba: máscara del circuito y órdenes de conducción](docs/demo.jpg)
 
-*Captura de la grabación incluida en `videos/`. Los indicadores de la interfaz corresponden a ese instante; no son un benchmark.*
+*Captura de una de las grabaciones de las pruebas. Los indicadores de la interfaz corresponden a ese instante; no son un benchmark.*
 
 ## Qué hace
 
@@ -26,7 +28,7 @@ flowchart LR
 
 ## Resultado y límites
 
-Se realizó una prueba integrada con captura de vídeo, segmentación, detección de cajas y envío de comandos al coche. Hay [vídeos de las pruebas](videos/) y un [guion de presentación](presentacion/guion_5min.pdf) con los resultados y limitaciones.
+Se realizó una prueba integrada con captura de vídeo, segmentación, detección de cajas y envío de comandos al coche. Hay [vídeos de las pruebas](https://github.com/R2DeezNuts/jetson-racer/releases) y un [guion de presentación](presentacion/guion_5min.pdf) con los resultados y limitaciones.
 
 La cámara y la latencia del recorrido Jetson–portátil–Jetson condicionan el control. No se dispone de una evaluación formal de FPS, latencia o tasa de éxito; el proyecto documenta un prototipo experimental. La inferencia embarcada en Jetson queda como una vía de desarrollo.
 
@@ -53,7 +55,7 @@ La variable `PYTHON_BIN` selecciona el entorno para los lanzadores; debes defini
 
 ### Configurar y arrancar
 
-1. Ajusta IP de Jetson y portátil, usuario SSH, clave y directorio remoto en [global_config.json](socket_vision/global_config.json).
+1. Copia [global_config.example.json](socket_vision/global_config.example.json) a `socket_vision/global_config.json` y ajusta en él la IP de la Jetson y del portátil, el usuario SSH, la clave y el directorio remoto. Ese archivo no se versiona.
 2. Revisa la [configuración de vídeo](socket_vision/conexion/config/default_config.json), los [parámetros de visión](socket_vision/vision/config/default_config.json) y la [calibración de control](socket_vision/control/config/default_config.json).
 3. Reserva el directorio remoto para este proyecto: la sincronización sustituye su subcarpeta `socket_vision`.
 4. Desde la raíz del repositorio, ejecuta:
@@ -74,6 +76,11 @@ El lanzador sincroniza el runtime con la Jetson y abre las terminales de visión
 | [socket_vision/jetson](socket_vision/jetson/README.md) | Captura de cámara y actuación sobre el coche |
 | [circuito_segmentation](circuito_segmentation/README.md) | Dataset, entrenamiento, predicción y exportación |
 | [presentacion](presentacion/) | Presentación y guion en PDF y LaTeX |
-| [videos](videos/) | Grabaciones de las pruebas |
 
 Para reproducir el entrenamiento, sigue la [guía del modelo](circuito_segmentation/README.md). El runtime integrado del coche está en `socket_vision`; el ejemplo `jetson_runtime.py` del directorio de entrenamiento es una base experimental independiente.
+
+Las grabaciones de las pruebas y los checkpoints de PyTorch (`.pth`) no están en el repositorio por su tamaño: se descargan desde las [Releases](https://github.com/R2DeezNuts/jetson-racer/releases).
+
+## Licencia
+
+[MIT](LICENSE)

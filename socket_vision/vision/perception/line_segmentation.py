@@ -6,7 +6,7 @@ import numpy as np
 def _find_project_root() -> Path:
     current = Path(__file__).resolve()
     for parent in current.parents:
-        if (parent / "global_config.json").exists() and (parent / "config_loader.py").exists():
+        if (parent / "config_loader.py").exists():
             return parent
     # Fallback to previous behavior if markers are not found.
     return current.parents[2]

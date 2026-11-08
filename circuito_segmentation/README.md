@@ -154,6 +154,8 @@ El mejor modelo se guarda en:
 checkpoints/best_model.pth
 ```
 
+Los checkpoints entrenados no se versionan por su tamaño; para usar los del proyecto sin reentrenar, descarga `best_model.pth` de las [Releases](https://github.com/R2DeezNuts/jetson-racer/releases) y guárdalo en `checkpoints/`.
+
 ## Probar con una imagen
 
 ```bash

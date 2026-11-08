@@ -12,3 +12,17 @@ third_party/
 *.zip
 *.engine
 presentacion/PresentaciónTFM-1.pdf
+
+# LaTeX build files
+*.aux
+*.log
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.nav
+*.snm
+*.toc
+*.out
+
+# Local network settings; copy from socket_vision/global_config.example.json
+socket_vision/global_config.json
