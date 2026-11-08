@@ -6,7 +6,7 @@ Prototipo de conducción por visión para un coche con Jetson Nano: segmentació
 
 **Python · OpenCV · PyTorch · ONNX · Jetson Nano**
 
-[Demostraciones](https://github.com/R2DeezNuts/jetson-racer/releases) · [Presentación](presentacion/presentacion.pdf) · [Entrenamiento](circuito_segmentation/README.md) · [Portfolio](https://r2deeznuts.github.io/)
+[Demostraciones](https://github.com/R2DeezNuts/jetson-racer/releases) · [Presentación](docs/Presentaci%C3%B3nTFM-1.pdf) · [Propuesta](docs/PropostaTFM_JuanJosePradoNeira_JavierRegoBargos.pdf) · [Entrenamiento](circuito_segmentation/README.md) · [Portfolio](https://r2deeznuts.github.io/)
 
 ![Interfaz durante una prueba: máscara del circuito y órdenes de conducción](docs/demo.jpg)
 
@@ -28,7 +28,7 @@ flowchart LR
 
 ## Resultado y límites
 
-Se realizó una prueba integrada con captura de vídeo, segmentación, detección de cajas y envío de comandos al coche. Hay [vídeos de las pruebas](https://github.com/R2DeezNuts/jetson-racer/releases) y un [guion de presentación](presentacion/guion_5min.pdf) con los resultados y limitaciones.
+Se realizó una prueba integrada con captura de vídeo, segmentación, detección de cajas y envío de comandos al coche. Hay [vídeos de las pruebas](https://github.com/R2DeezNuts/jetson-racer/releases) y una [presentación](docs/Presentaci%C3%B3nTFM-1.pdf) con los resultados y limitaciones.
 
 La cámara y la latencia del recorrido Jetson–portátil–Jetson condicionan el control. No se dispone de una evaluación formal de FPS, latencia o tasa de éxito; el proyecto documenta un prototipo experimental. La inferencia embarcada en Jetson queda como una vía de desarrollo.
 
@@ -75,7 +75,7 @@ El lanzador sincroniza el runtime con la Jetson y abre las terminales de visión
 | [socket_vision/control](socket_vision/control/README.md) | Mando manual y protocolo de órdenes |
 | [socket_vision/jetson](socket_vision/jetson/README.md) | Captura de cámara y actuación sobre el coche |
 | [circuito_segmentation](circuito_segmentation/README.md) | Dataset, entrenamiento, predicción y exportación |
-| [presentacion](presentacion/) | Presentación y guion en PDF y LaTeX |
+| [docs](docs/) | Presentación y propuesta del TFM en PDF, y captura de la demo |
 
 Para reproducir el entrenamiento, sigue la [guía del modelo](circuito_segmentation/README.md). El runtime integrado del coche está en `socket_vision`; el ejemplo `jetson_runtime.py` del directorio de entrenamiento es una base experimental independiente.
 

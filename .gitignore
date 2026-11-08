@@ -11,7 +11,6 @@ third_party/
 *.mp4
 *.zip
 *.engine
-presentacion/PresentaciónTFM-1.pdf
 
 # LaTeX build files
 *.aux
@@ -31,3 +30,10 @@ socket_vision/global_config.json
 videos/
 circuito_segmentation/checkpoints/
 versiones_entrega/
+
+# LaTeX sources and drafts kept only locally; the PDFs are in docs/
+*.tex
+README.pdf
+Proposta_TFM/
+paper/
+presentacion/
