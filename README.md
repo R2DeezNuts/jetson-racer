@@ -8,9 +8,9 @@ Prototipo de conducción por visión para un coche con Jetson Nano: segmentació
 
 [Vídeo](https://www.youtube.com/watch?v=iftXwQ2Pxf0) · [Presentación](docs/Presentaci%C3%B3nTFM-1.pdf) · [Propuesta](docs/PropostaTFM_JuanJosePradoNeira_JavierRegoBargos.pdf) · [Entrenamiento](circuito_segmentation/README.md) · [Portfolio](https://r2deeznuts.github.io/)
 
-[![Interfaz durante una prueba: máscara del circuito y órdenes de conducción](docs/demo.jpg)](https://www.youtube.com/watch?v=iftXwQ2Pxf0)
+[![El coche sigue la línea del circuito de forma autónoma](docs/demo.gif)](https://www.youtube.com/watch?v=iftXwQ2Pxf0)
 
-*Captura de una prueba; pulsa la imagen para ver el [vídeo en YouTube](https://www.youtube.com/watch?v=iftXwQ2Pxf0). Los indicadores de la interfaz corresponden a ese instante; no son un benchmark.*
+*Fragmento acelerado ×2 de la prueba en el circuito; pulsa la imagen para ver el [vídeo completo en YouTube](https://www.youtube.com/watch?v=iftXwQ2Pxf0).*
 
 ## Qué hace
 
@@ -29,6 +29,10 @@ flowchart LR
 ## Resultado y límites
 
 Se realizó una prueba integrada con captura de vídeo, segmentación, detección de cajas y envío de comandos al coche. Hay un [vídeo de las pruebas](https://www.youtube.com/watch?v=iftXwQ2Pxf0) y una [presentación](docs/Presentaci%C3%B3nTFM-1.pdf) con los resultados y limitaciones.
+
+![Interfaz durante una prueba: máscara del circuito y órdenes de conducción](docs/demo.jpg)
+
+*La interfaz del portátil durante una prueba. Los indicadores corresponden a ese instante; no son un benchmark.*
 
 La cámara y la latencia del recorrido Jetson–portátil–Jetson condicionan el control. No se dispone de una evaluación formal de FPS, latencia o tasa de éxito; el proyecto documenta un prototipo experimental. La inferencia embarcada en Jetson queda como una vía de desarrollo.
 
