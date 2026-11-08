@@ -8,9 +8,11 @@ A vision-driven prototype for a Jetson Nano car: it segments the track and obsta
 
 [Video](https://www.youtube.com/watch?v=iftXwQ2Pxf0) · [Presentation (Spanish)](docs/Presentaci%C3%B3nTFM-1.pdf) · [Proposal (Spanish)](docs/PropostaTFM_JuanJosePradoNeira_JavierRegoBargos.pdf) · [Training](circuito_segmentation/README.md) · [Portfolio](https://r2deeznuts.github.io/)
 
-[![The car follows the track line on its own](docs/demo.gif)](https://www.youtube.com/watch?v=iftXwQ2Pxf0)
-
-*A clip of the track test at 2× speed; click the image to watch the [full video on YouTube](https://www.youtube.com/watch?v=iftXwQ2Pxf0).*
+<p align="center">
+  <a href="https://www.youtube.com/watch?v=iftXwQ2Pxf0"><img src="docs/demo.gif" alt="The car follows the track line on its own"></a>
+  <br>
+  <sub>Played at 2× speed. Click the image to watch the <a href="https://www.youtube.com/watch?v=iftXwQ2Pxf0">full video on YouTube</a> at real speed.</sub>
+</p>
 
 ## What it does
 

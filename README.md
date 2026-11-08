@@ -8,9 +8,11 @@ Prototipo de conducción por visión para un coche con Jetson Nano: segmentació
 
 [Vídeo](https://www.youtube.com/watch?v=iftXwQ2Pxf0) · [Presentación](docs/Presentaci%C3%B3nTFM-1.pdf) · [Propuesta](docs/PropostaTFM_JuanJosePradoNeira_JavierRegoBargos.pdf) · [Entrenamiento](circuito_segmentation/README.md) · [Portfolio](https://r2deeznuts.github.io/)
 
-[![El coche sigue la línea del circuito de forma autónoma](docs/demo.gif)](https://www.youtube.com/watch?v=iftXwQ2Pxf0)
-
-*Fragmento acelerado ×2 de la prueba en el circuito; pulsa la imagen para ver el [vídeo completo en YouTube](https://www.youtube.com/watch?v=iftXwQ2Pxf0).*
+<p align="center">
+  <a href="https://www.youtube.com/watch?v=iftXwQ2Pxf0"><img src="docs/demo.gif" alt="El coche sigue la línea del circuito de forma autónoma"></a>
+  <br>
+  <sub>Vídeo acelerado ×2. Pulsa la imagen para ver el <a href="https://www.youtube.com/watch?v=iftXwQ2Pxf0">vídeo completo en YouTube</a> a velocidad real.</sub>
+</p>
 
 ## Qué hace
 
