@@ -1,0 +1,13 @@
+__pycache__/
+*.py[cod]
+
+recordings/
+analysis/
+datasets/
+models/
+runs/
+third_party/
+
+*.mp4
+*.zip
+*.engine
